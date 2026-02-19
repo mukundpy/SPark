@@ -1,31 +1,44 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Montserrat } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
-const inter = Inter({ 
+const inter = Inter({
   subsets: ["latin"],
-  variable: '--font-inter',
+  variable: "--font-inter",
 });
 
-const montserrat = Montserrat({ 
+const montserrat = Montserrat({
   subsets: ["latin"],
-  variable: '--font-montserrat',
+  variable: "--font-montserrat",
 });
-
-const OFFICIAL_SITE = "https://spark.spit.ac.in/";
 
 export const metadata: Metadata = {
   title: "SPark - What Ignites SP",
-  description: "College committee showcasing creative content from photographers, reporters, and writers covering campus events. SPark at Sardar Patel Institute of Technology (SPIT).",
-  keywords: ["SPark", "SPIT", "Sardar Patel Institute of Technology", "college events", "photography", "journalism", "campus coverage"],
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
+  description:
+    "College committee showcasing creative content from photographers, reporters, and writers covering campus events at Sardar Patel Institute of Technology (SPIT).",
+  keywords: [
+    "SPark",
+    "SPIT",
+    "Sardar Patel Institute of Technology",
+    "college events",
+    "photography",
+    "journalism",
+    "campus coverage",
+  ],
   openGraph: {
     title: "SPark - What Ignites SP",
-    description: "What ignites SP — creative content from photographers, reporters, and writers at SPIT.",
-    url: OFFICIAL_SITE,
+    description:
+      "What ignites SP — creative content from photographers, reporters, and writers at SPIT.",
+    url: "https://spark.spit.ac.in/",
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#007BFF",
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({
@@ -42,11 +55,11 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${inter.variable} ${montserrat.variable} font-sans antialiased`}>
+      <body
+        className={`${inter.variable} ${montserrat.variable} font-sans antialiased`}
+      >
         <Navbar />
-        <main className="min-h-screen">
-          {children}
-        </main>
+        <main className="min-h-screen">{children}</main>
         <Footer />
       </body>
     </html>

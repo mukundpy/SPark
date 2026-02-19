@@ -38,7 +38,7 @@ const membersData = [
     contributions: 9,
   },
   {
-    id: 2,
+    id: 5,
     name: "Mitali",
     role: "Reporter",
     specialties: "News Reporting, Interviews",
@@ -48,14 +48,14 @@ const membersData = [
   {
     id: 6,
     name: "Aditya Yadav",
-    role: "Marketing Specialist{BKL}",
+    role: "Marketing Specialist",
     specialties: "Social Media Marketing, Content Strategy",
     bio: "Driving SPark's online presence and engagement through strategic marketing initiatives.",
     contributions: 7,
   },
 ];
 
-const roles = ['All', 'Photographer', 'Reporter', 'Writer'];
+const roles = ['All', 'Photographer', 'Reporter', 'Writer', 'Marketing Specialist'];
 
 export default function MembersPage() {
   const [selectedRole, setSelectedRole] = useState('All');

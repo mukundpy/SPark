@@ -58,9 +58,9 @@ const memberData: Record<number, Member> = {
   },
   2: {
     id: 2,
-    name: "Aryaman Jha2",
-    role: "Junior Reporter(loda bc)",
-    biography: "First of all thodaa sa chut*ya hai ye banda. Aryaman is an accomplished writer and reporter who has covered over 100 college events. He excels at crafting engaging narratives and conducting insightful interviews. His reports are known for their depth and attention to detail.",
+    name: "Aryaman Jha",
+    role: "Junior Reporter",
+    biography: "Aryaman is an accomplished writer and reporter who has covered over 100 college events. He excels at crafting engaging narratives and conducting insightful interviews. His reports are known for their depth and attention to detail.",
     specialties: ["Feature Writing", "Event Reporting", "Interviews"],
     email: "aryaman.jha25@spit.ac.in",
     portfolioLinks: [

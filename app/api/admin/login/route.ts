@@ -1,12 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
 
 export async function POST(request: NextRequest) {
   try {
     const { email, password } = await request.json();
 
-    // Validate input
     if (!email || !password) {
       return NextResponse.json(
         { error: 'Email and password are required' },
@@ -14,51 +11,30 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // In production, fetch admin from database
     const adminEmail = process.env.ADMIN_EMAIL || 'admin@spark.college.edu';
     const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
 
-    // Check credentials
-    if (email !== adminEmail) {
+    if (email !== adminEmail || password !== adminPassword) {
       return NextResponse.json(
         { error: 'Invalid credentials' },
         { status: 401 }
       );
     }
 
-    // In production, use bcrypt.compare with hashed password from database
-    const isValidPassword = password === adminPassword;
-    // const isValidPassword = await bcrypt.compare(password, hashedPasswordFromDB);
-
-    if (!isValidPassword) {
-      return NextResponse.json(
-        { error: 'Invalid credentials' },
-        { status: 401 }
-      );
-    }
-
-    // Generate JWT token
-    const token = jwt.sign(
-      { email, role: 'admin' },
-      process.env.JWT_SECRET || 'your-secret-key',
-      { expiresIn: '24h' }
-    );
-
-    // Create response with token in cookie
     const response = NextResponse.json(
-      { 
+      {
         success: true,
         message: 'Login successful',
-        user: { email, role: 'admin' }
+        user: { email, role: 'admin' },
       },
       { status: 200 }
     );
 
-    response.cookies.set('auth_token', token, {
+    response.cookies.set('auth_token', 'admin-session', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
-      maxAge: 86400 // 24 hours
+      maxAge: 86400,
     });
 
     return response;

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { Mail } from 'lucide-react';
+import { Mail, Lock } from 'lucide-react';
 
 export default function AdminLoginPage() {
   const router = useRouter();
