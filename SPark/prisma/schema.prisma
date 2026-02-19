@@ -1,0 +1,139 @@
+// This is your Prisma schema file
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Member entity - stores committee members information
+model Member {
+  id              Int            @id @default(autoincrement())
+  firstName       String         @map("first_name")
+  lastName        String         @map("last_name")
+  email           String         @unique
+  password        String?        // For admin login
+  role            MemberRole
+  biography       String?
+  specialties     String?
+  portfolioLinks  String?        @map("portfolio_links")
+  isActive        Boolean        @default(true) @map("is_active")
+  isAdmin         Boolean        @default(false) @map("is_admin")
+  createdAt       DateTime       @default(now()) @map("created_at")
+  updatedAt       DateTime       @updatedAt @map("updated_at")
+  
+  // Relations
+  contentItems    ContentItem[]
+  createdEvents   Event[]        @relation("CreatedBy")
+  
+  @@map("members")
+}
+
+enum MemberRole {
+  PHOTOGRAPHER
+  REPORTER
+  COLUMNIST
+  WRITER
+  EDITOR
+}
+
+// Event entity - stores college event information
+model Event {
+  id                 Int                  @id @default(autoincrement())
+  eventName          String               @map("event_name")
+  slug               String               @unique
+  eventDate          DateTime             @map("event_date")
+  startDate          DateTime?            @map("start_date")
+  endDate            DateTime?            @map("end_date")
+  venue              String?
+  description        String
+  isPublished        Boolean              @default(false) @map("is_published")
+  createdById        Int                  @map("created_by_member_id")
+  createdAt          DateTime             @default(now()) @map("created_at")
+  updatedAt          DateTime             @updatedAt @map("updated_at")
+  
+  // Relations
+  createdBy          Member               @relation("CreatedBy", fields: [createdById], references: [id])
+  contentItems       ContentItem[]
+  categories         EventCategoryMap[]
+  
+  @@map("events")
+}
+
+// ContentItem entity - photos and reports
+model ContentItem {
+  id              Int           @id @default(autoincrement())
+  eventId         Int           @map("event_id")
+  memberId        Int           @map("member_id")
+  contentType     ContentType   @map("content_type")
+  title           String?
+  contentPath     String        @map("content_path")
+  coverageStage   String?       @map("coverage_stage")
+  description     String?
+  publishedAt     DateTime      @default(now()) @map("published_at")
+  createdAt       DateTime      @default(now()) @map("created_at")
+  
+  // Relations
+  event           Event         @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  member          Member        @relation(fields: [memberId], references: [id])
+  
+  @@map("content_items")
+}
+
+enum ContentType {
+  PHOTO
+  REPORT
+}
+
+// EventCategory entity - classification system
+model EventCategory {
+  id            Int                  @id @default(autoincrement())
+  categoryName  String               @unique @map("category_name")
+  categorySlug  String               @unique @map("category_slug")
+  description   String?
+  createdAt     DateTime             @default(now()) @map("created_at")
+  
+  // Relations
+  events        EventCategoryMap[]
+  
+  @@map("event_categories")
+}
+
+// EventCategoryMap - junction table for many-to-many relationship
+model EventCategoryMap {
+  eventId      Int            @map("event_id")
+  categoryId   Int            @map("category_id")
+  
+  // Relations
+  event        Event          @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  category     EventCategory  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  
+  @@id([eventId, categoryId])
+  @@map("event_category_map")
+}
+
+// AdminReporting - internal metrics (not exposed publicly)
+model AdminReporting {
+  id                    Int       @id @default(autoincrement())
+  reportType            String    @map("report_type")
+  reportData            String    @map("report_data") // JSON data
+  accessibleByAdminOnly Boolean   @default(true) @map("accessible_by_admin_only")
+  generatedAt           DateTime  @default(now()) @map("generated_at")
+  
+  @@map("admin_reporting")
+}
+
+// ContactInquiry - stores contact form submissions
+model ContactInquiry {
+  id          Int       @id @default(autoincrement())
+  name        String
+  email       String
+  subject     String
+  message     String
+  isRead      Boolean   @default(false) @map("is_read")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  
+  @@map("contact_inquiries")
+}
